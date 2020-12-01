@@ -1,4 +1,3 @@
-
 var vertexShaderText = /* glsl */`
 precision mediump float; 
 
@@ -97,7 +96,7 @@ var InitDemo = function () {
 		-1.0, 1.0, 1.0,    0, 0,
 		-1.0, -1.0, 1.0,   1, 0,
 		-1.0, -1.0, -1.0,  1, 1,
-		-1.0, 1.0, -1.0,   0, 1,
+		-1.0, 1.0, -1.0,   1, 0,
 
 		// Right
 		1.0, 1.0, 1.0,    1, 1,
@@ -161,7 +160,7 @@ var InitDemo = function () {
 	gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR); 
 	gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR); 
 
-	gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, document.getElementById("crate")); 
+	gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, document.getElementById("crate-image")); 
 
 	gl.bindTexture(gl.TEXTURE_2D, null);
 
@@ -217,10 +216,9 @@ var InitDemo = function () {
 	gl.enableVertexAttribArray(positionAttribLocation);
 	gl.enableVertexAttribArray(texCoordAttribLocation);
 	gl.enable(gl.DEPTH_TEST); 
-	gl.enable(gl.CULL_FACE); 
-	gl.frontFace(gl.CCW); 
-	gl.CULL_FACE(gl.BACK); 
-
+	gl.enable(gl.CULL_FACE);  
+	gl.frontFace(gl.CCW);
+  	gl.cullFace(gl.BACK);
 	
 	var translationMatrix = new Float32Array(16); 
 	var rotationMatrix = new Float32Array(16); 
