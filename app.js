@@ -7,7 +7,7 @@ attribute vec3 vertPosition;
 attribute vec3 vertColor; 
 varying vec3 fragColor; 
 
-uniform mat4 mWorld; 
+uniform mat4 mWorld; //model View
 uniform mat4 mView; 
 uniform mat4 mProj; 
 
@@ -29,7 +29,7 @@ var fragmentShaderText= /* glsl*/ `
 `
 
 var InitDemo = function () {
-	console.log('This is working');
+	console.log('file loaded');
 
 	var canvas = document.getElementById('game-surface');
 	var gl = canvas.getContext('webgl');
