@@ -1,37 +1,24 @@
-
-var vertexShaderText = /* glsl */`
-precision mediump float; 
-
-// attributes because they change through the vertices
-attribute vec3 vertPosition; 
-attribute vec3 vertColor; 
-varying vec3 fragColor; 
-attribute vec2 vertTexCoord; 
-varying vec2 fragTexCoord; 
-
-uniform mat4 mWorld; //model View
-uniform mat4 mView; 
-uniform mat4 mProj; 
-
-void main () {
-    fragTexCoord = vertTexCoord;  
-    gl_Position = mProj * mView * mWorld * vec4(vertPosition , 1.0); 
-}
-`
-var fragmentShaderText= /* glsl*/ `
-    precision mediump float;
-	
-	varying vec2 fragTexCoord; 
-	uniform sampler2D sampler; 
-
-    void main() {
-
-		gl_FragColor = texture2D(sampler, fragTexCoord); 
-		
-    }
-`
+var gl; 
 
 var InitDemo = function () {
+	loadTextResource('/shader.vs.glsl', function(vsError, vsText) {
+		if (vsError) {
+			alert ('Error with vs error');
+			console.error(vsError); 
+		} else {
+			loadTextResource('/shader.fs.glsl', function (fsError, fsText) {
+				if (fsError) {
+					alert('Error with fs'); 
+					console.log(fsError); 
+				} else {
+					RunDemo(vsText, fsText)
+				}
+			})
+		}
+	})
+}
+
+var RunDemo = function (vertexShaderText, fragmentShaderText) {
 	console.log('This is working');
 
 	var canvas = document.getElementById('game-surface');
@@ -196,12 +183,12 @@ var InitDemo = function () {
 	gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
 	gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
 	gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
-	gl.texImage2D(
-		gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA,
-		gl.UNSIGNED_BYTE,
-		document.getElementById('crate-image')
-	);
-	gl.bindTexture(gl.TEXTURE_2D, null);
+	// gl.texImage2D(
+	// 	gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA,
+	// 	gl.UNSIGNED_BYTE,
+	// 	document.getElementById('crate-image')
+	// );
+	// gl.bindTexture(gl.TEXTURE_2D, null);
 
 	// Tell OpenGL state machine which program should be active.
 	gl.useProgram(program);
