@@ -1,4 +1,5 @@
 var gl; 
+var model; 
 
 var InitDemo = function () {
 	loadTextResource('/shader.vs.glsl', function(vsError, vsText) {
@@ -11,16 +12,30 @@ var InitDemo = function () {
 					alert('Error with fs'); 
 					console.log(fsError); 
 				} else {
-					RunDemo(vsText, fsText)
+					loadJSONResource('/Susan.json', function (err, obj){
+						if (err) {
+							alert("error with the object"); 
+							console.error(err);
+						} else {
+							loadImage("/SusanTexture.png", function(imgErr, image) {
+								if (imgErr) {
+									alert("Error while loading the image"); 
+									console.error(imgErr); 
+								} else {
+									RunDemo(vsText, fsText, image, obj)
+								}
+							}); 
+						}
+					})
 				}
 			})
 		}
 	})
 }
 
-var RunDemo = function (vertexShaderText, fragmentShaderText) {
+var RunDemo = function (vertexShaderText, fragmentShaderText, SusanImage, SusanModel) {
 	console.log('This is working');
-
+	model = SusanModel; 
 	var canvas = document.getElementById('game-surface');
 	var gl = canvas.getContext('webgl');
 
@@ -78,117 +93,65 @@ var RunDemo = function (vertexShaderText, fragmentShaderText) {
 	//
 	// Create buffer
 	//
-	var boxVertices = 
-	[ // X, Y, Z           U, V
-		// Top
-		-1.0, 1.0, -1.0,   0, 0,
-		-1.0, 1.0, 1.0,    0, 1,
-		1.0, 1.0, 1.0,     1, 1,
-		1.0, 1.0, -1.0,    1, 0,
+	var susanVertices = SusanModel.meshes[0].vertices; 
 
-		// Left
-		-1.0, 1.0, 1.0,    0, 0,
-		-1.0, -1.0, 1.0,   1, 0,
-		-1.0, -1.0, -1.0,  1, 1,
-		-1.0, 1.0, -1.0,   0, 1,
+	var susanIndices = [].concat.apply([], SusanModel.meshes[0].faces); 
 
-		// Right
-		1.0, 1.0, 1.0,    1, 1,
-		1.0, -1.0, 1.0,   0, 1,
-		1.0, -1.0, -1.0,  0, 0,
-		1.0, 1.0, -1.0,   1, 0,
+	var  susanTextCoords = SusanModel.meshes[0].texturecoords[0]; 
 
-		// Front
-		1.0, 1.0, 1.0,    1, 1,
-		1.0, -1.0, 1.0,    1, 0,
-		-1.0, -1.0, 1.0,    0, 0,
-		-1.0, 1.0, 1.0,    0, 1,
+	var susanPosVertexBufferObject = gl.createBuffer();
+	gl.bindBuffer(gl.ARRAY_BUFFER, susanPosVertexBufferObject);
+	gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(susanVertices), gl.STATIC_DRAW);
 
-		// Back
-		1.0, 1.0, -1.0,    0, 0,
-		1.0, -1.0, -1.0,    0, 1,
-		-1.0, -1.0, -1.0,    1, 1,
-		-1.0, 1.0, -1.0,    1, 0,
+	var susanIndexBufferObject = gl.createBuffer();
+	gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, susanIndexBufferObject);
+	gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(susanIndices), gl.STATIC_DRAW);
 
-		// Bottom
-		-1.0, -1.0, -1.0,   1, 1,
-		-1.0, -1.0, 1.0,    1, 0,
-		1.0, -1.0, 1.0,     0, 0,
-		1.0, -1.0, -1.0,    0, 1,
-	];
-
-	var boxIndices =
-	[
-		// Top
-		0, 1, 2,
-		0, 2, 3,
-
-		// Left
-		5, 4, 6,
-		6, 4, 7,
-
-		// Right
-		8, 9, 10,
-		8, 10, 11,
-
-		// Front
-		13, 12, 14,
-		15, 14, 12,
-
-		// Back
-		16, 17, 18,
-		16, 18, 19,
-
-		// Bottom
-		21, 20, 22,
-		22, 20, 23
-	];
-
-	var boxVertexBufferObject = gl.createBuffer();
-	gl.bindBuffer(gl.ARRAY_BUFFER, boxVertexBufferObject);
-	gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(boxVertices), gl.STATIC_DRAW);
-
-	var boxIndexBufferObject = gl.createBuffer();
-	gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, boxIndexBufferObject);
-	gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(boxIndices), gl.STATIC_DRAW);
+	var susanTextCoordVertexBufferObject = gl.createBuffer();  
+	gl.bindBuffer(gl.ARRAY_BUFFER, susanTextCoordVertexBufferObject); 
+	gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(susanTextCoords), gl.STATIC_DRAW); 
 
 	var positionAttribLocation = gl.getAttribLocation(program, 'vertPosition');
 	var texCoordAttribLocation = gl.getAttribLocation(program, 'vertTexCoord');
+
+	gl.bindBuffer(gl.ARRAY_BUFFER, susanPosVertexBufferObject);
 	gl.vertexAttribPointer(
 		positionAttribLocation, // Attribute location
 		3, // Number of elements per attribute
 		gl.FLOAT, // Type of elements
 		gl.FALSE,
-		5 * Float32Array.BYTES_PER_ELEMENT, // Size of an individual vertex
+		3 * Float32Array.BYTES_PER_ELEMENT, // Size of an individual vertex
 		0 // Offset from the beginning of a single vertex to this attribute
 	);
+	gl.enableVertexAttribArray(positionAttribLocation);
+
+	gl.bindBuffer(gl.ARRAY_BUFFER, susanTextCoordVertexBufferObject); 
 	gl.vertexAttribPointer(
 		texCoordAttribLocation, // Attribute location
 		2, // Number of elements per attribute
 		gl.FLOAT, // Type of elements
 		gl.FALSE,
-		5 * Float32Array.BYTES_PER_ELEMENT, // Size of an individual vertex
-		3 * Float32Array.BYTES_PER_ELEMENT // Offset from the beginning of a single vertex to this attribute
+		2 * Float32Array.BYTES_PER_ELEMENT, // Size of an individual vertex
+		0 * Float32Array.BYTES_PER_ELEMENT // Offset from the beginning of a single vertex to this attribute
 	);
-
-	gl.enableVertexAttribArray(positionAttribLocation);
 	gl.enableVertexAttribArray(texCoordAttribLocation);
 
 	//
 	// Create texture
 	//
-	var boxTexture = gl.createTexture();
-	gl.bindTexture(gl.TEXTURE_2D, boxTexture);
+	var susanTexture = gl.createTexture();
+	gl.bindTexture(gl.TEXTURE_2D, susanTexture);
+	gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
 	gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
 	gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
 	gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
 	gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
-	// gl.texImage2D(
-	// 	gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA,
-	// 	gl.UNSIGNED_BYTE,
-	// 	document.getElementById('crate-image')
-	// );
-	// gl.bindTexture(gl.TEXTURE_2D, null);
+	gl.texImage2D(
+		gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA,
+		gl.UNSIGNED_BYTE,
+		SusanImage
+	);
+	gl.bindTexture(gl.TEXTURE_2D, null);
 
 	// Tell OpenGL state machine which program should be active.
 	gl.useProgram(program);
@@ -227,10 +190,10 @@ var RunDemo = function (vertexShaderText, fragmentShaderText) {
 		gl.clearColor(0.75, 0.85, 0.8, 1.0);
 		gl.clear(gl.DEPTH_BUFFER_BIT | gl.COLOR_BUFFER_BIT);
 
-		gl.bindTexture(gl.TEXTURE_2D, boxTexture);
+		gl.bindTexture(gl.TEXTURE_2D, susanTexture);
 		gl.activeTexture(gl.TEXTURE0);
 
-		gl.drawElements(gl.TRIANGLES, boxIndices.length, gl.UNSIGNED_SHORT, 0);
+		gl.drawElements(gl.TRIANGLES, susanIndices.length, gl.UNSIGNED_SHORT, 0);
 
 		requestAnimationFrame(loop);
 	};
