@@ -5,7 +5,9 @@ precision mediump float;
 attribute vec3 vertPosition; 
 attribute vec3 vertColor; 
 attribute vec3 vertNormal; 
+
 varying vec3 fragColor; 
+varying vec3 fragNormal; 
 
 uniform mat4 mWorld; //model View
 uniform mat4 mView; 
@@ -13,17 +15,25 @@ uniform mat4 mProj;
 
 void main () {
     fragColor = vertColor; 
+	fragNormal = (vec4(vertNormal, 0.0)).xyz; 
     gl_Position = mProj * mView *  mWorld *  vec4(vertPosition , 1.0); 
 }
 `;
 var fragmentShaderText = /* glsl*/ `
     precision mediump float;
 	
-    varying vec3 fragColor; 
+    varying vec3 fragColor;
+	varying vec3 fragNormal;  
 
     void main() {
 
-		gl_FragColor = vec4(fragColor, 1.0); 
+		vec3 ambientLight = vec3(0.2, 0.2, 0.5); 
+		vec3 sunLight = vec3(0.3922, 0.1059, 0.1059); 
+		vec3 sunLightDirection = normalize(vec3(3.0, 4.0, -2.0)); 
+
+		vec3 lightIntensity = ambientLight + max(sunLight * dot(fragNormal, sunLightDirection), 0.0);  
+
+		gl_FragColor = vec4(fragColor * lightIntensity, 1.0); 
 		
     }
 `;
@@ -132,11 +142,11 @@ var InitDemo = function () {
   ];
 
   var pyramidNormals = [
-	  0, 0, 0,
-	  0, 0, 0, 
-	  0, 1, 0,
-	  0, 1, 0, 
-	  1, -0.5, 0,	  
+	  0.0, 0.0, 0.0,
+	  0.0, 0.0, 0.0, 
+	  0.0, 1.0, 0.0,
+	  0.0, 1.0, 0.0, 
+	  1.0, -0.5, 0.0,	  
   ]
 
   var pyramidVertexBufferObject = gl.createBuffer();
@@ -176,7 +186,7 @@ var InitDemo = function () {
     3 * Float32Array.BYTES_PER_ELEMENT // Offset from the beginning of a single vertex to this attribute
   );
 
-  gl.bindBuffer(gl.ARRAY_BUFFER, pyramidNormals); 
+  gl.bindBuffer(gl.ARRAY_BUFFER, pyramidNormalBufferObject); 
   var normalAttribLocation = gl.getAttribLocation(program, "vertNormal"); 
   gl.vertexAttribPointer(
 	  normalAttribLocation, 
