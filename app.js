@@ -150,7 +150,7 @@ var InitDemo = function () {
     3, // Number of elements per attribute
     gl.FLOAT, // Type of elements
     gl.FALSE,
-    3 * Float32Array.BYTES_PER_ELEMENT, // Size of an individual vertex
+    6 * Float32Array.BYTES_PER_ELEMENT, // Size of an individual vertex
     0 // Offset from the beginning of a single vertex to this attribute
   );
   gl.vertexAttribPointer(
@@ -158,7 +158,7 @@ var InitDemo = function () {
     3, // Number of elements per attribute
     gl.FLOAT, // Type of elements
     gl.FALSE,
-    3 * Float32Array.BYTES_PER_ELEMENT, // Size of an individual vertex
+    6 * Float32Array.BYTES_PER_ELEMENT, // Size of an individual vertex
     3 * Float32Array.BYTES_PER_ELEMENT // Offset from the beginning of a single vertex to this attribute
   );
 
@@ -173,10 +173,10 @@ var InitDemo = function () {
   var viewMatrix = new Float32Array(16);
   var projMatrix = new Float32Array(16);
   glMatrix.mat4.identity(worldMatrix);
-  glMatrix.mat4.lookAt(viewMatrix, [0, 1, -10], [0, 0, 0], [0, 2, 0]);
+  glMatrix.mat4.lookAt(viewMatrix, [0, 0, -3], [0, 0, 0], [0, 2, 0]);
   glMatrix.mat4.perspective(
     projMatrix,
-    glMatrix.glMatrix.toRadian(90),
+    glMatrix.glMatrix.toRadian(120),
     canvas.width / canvas.height,
     0.001,
     1000.0
