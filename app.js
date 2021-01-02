@@ -130,6 +130,10 @@ var InitDemo = function () {
 	15, 16, 17, 
   ];
 
+  var pyramidNormals = [
+	  
+  ]
+
   var pyramidVertexBufferObject = gl.createBuffer();
   gl.bindBuffer(gl.ARRAY_BUFFER, pyramidVertexBufferObject);
   gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(pyramidVertices), gl.STATIC_DRAW);
