@@ -92,34 +92,33 @@ var InitDemo = function () {
   var pyramidVertices = [
     // X, Y, Z           R, G, B
 	// Bottom face
-	0.0, 0.0, 0.0,
-	0.0, 0.0, -1.0,
-	1.0, 0.0, -1.0,
-	0.0, 0.0, 0.0,
-	1.0, 0.0, -1.0,
-	1.0, 0.0, 0.0, 
+	0.0, 0.0, 0.0, 0.5, 0.5, 0.5, 
+	0.0, 0.0, -1.0,	0.5, 0.5, 0.5, 
+	1.0, 0.0, -1.0,	0.5, 0.5, 0.5,
+	0.0, 0.0, 0.0,	0.5, 0.5, 0.5,
+	1.0, 0.0, -1.0,	0.5, 0.5, 0.5,
+	1.0, 0.0, 0.0, 	0.5, 0.5, 0.5,
 
 	// Front face 
-	0.0, 0.0, 0.0, 
-	1.0, 0.0, 0.0, 
-	0.5, 1.0, -0.5, 
+	0.0, 0.0, 0.0, 0.75, 0.25, 0.25,
+	1.0, 0.0, 0.0, 0.75, 0.25, 0.25, 
+	0.5, 1.0, -0.5, 0.75, 0.25, 0.25,
 
 	// Right face
-	1.0, 0.0, 0.0, 
-	1.0, 0.0, -1.0,
-	0.5, 1.0, -0.5, 
+	1.0, 0.0, 0.0, 1.0, 0.0, 0.15,
+	1.0, 0.0, -1.0, 1.0, 0.0, 0.15,
+	0.5, 1.0, -0.5, 1.0, 0.0, 0.15,
 
 
 	// Back face
-	1.0, 0.0, -1.0, 
-	0.0, 0.0, -1.0, 
-	0.5, 1.0, -0.5,
+	1.0, 0.0, -1.0, 0.5, 0.5, 1.0,
+	0.0, 0.0, -1.0, 0.5, 0.5, 1.0,
+	0.5, 1.0, -0.5, 0.5, 0.5, 1.0,
 
 	// Left face
-	0.0, 0.0, -1.0, 
-	0.0, 0.0, 0.0, 
-	0.5, 1.0, -0.5, 
-
+	0.0, 0.0, -1.0, 0.25, 0.25, 0.75,
+	0.0, 0.0, 0.0, 	0.25, 0.25, 0.75,
+	0.5, 1.0, -0.5, 0.25, 0.25, 0.75,
   ];
 
   var pyramidIndices = [
@@ -159,8 +158,8 @@ var InitDemo = function () {
     3, // Number of elements per attribute
     gl.FLOAT, // Type of elements
     gl.FALSE,
-    0 * Float32Array.BYTES_PER_ELEMENT, // Size of an individual vertex
-    0 * Float32Array.BYTES_PER_ELEMENT // Offset from the beginning of a single vertex to this attribute
+    3 * Float32Array.BYTES_PER_ELEMENT, // Size of an individual vertex
+    3 * Float32Array.BYTES_PER_ELEMENT // Offset from the beginning of a single vertex to this attribute
   );
 
   //tell webGl which program we'rre using
