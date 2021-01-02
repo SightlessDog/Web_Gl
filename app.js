@@ -4,6 +4,7 @@ precision mediump float;
 // attributes because they change through the vertices
 attribute vec3 vertPosition; 
 attribute vec3 vertColor; 
+attribute vec3 vertNormal; 
 varying vec3 fragColor; 
 
 uniform mat4 mWorld; //model View
@@ -131,7 +132,11 @@ var InitDemo = function () {
   ];
 
   var pyramidNormals = [
-	  
+	  0, 0, 0,
+	  0, 0, 0, 
+	  0, 1, 0,
+	  0, 1, 0, 
+	  1, -0.5, 0,	  
   ]
 
   var pyramidVertexBufferObject = gl.createBuffer();
@@ -145,6 +150,11 @@ var InitDemo = function () {
     new Uint16Array(pyramidIndices),
     gl.STATIC_DRAW
   );
+
+  var pyramidNormalBufferObject = gl.createBuffer();
+  gl.bindBuffer(gl.ARRAY_BUFFER, pyramidNormalBufferObject); 
+  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(pyramidNormals), gl.STATIC_DRAW); 
+
 
   var positionAttribLocation = gl.getAttribLocation(program, "vertPosition");
   var colorAttribLocation = gl.getAttribLocation(program, "vertColor");
@@ -165,6 +175,18 @@ var InitDemo = function () {
     6 * Float32Array.BYTES_PER_ELEMENT, // Size of an individual vertex
     3 * Float32Array.BYTES_PER_ELEMENT // Offset from the beginning of a single vertex to this attribute
   );
+
+  gl.bindBuffer(gl.ARRAY_BUFFER, pyramidNormals); 
+  var normalAttribLocation = gl.getAttribLocation(program, "vertNormal"); 
+  gl.vertexAttribPointer(
+	  normalAttribLocation, 
+	  3, 
+	  gl.FLOAT, 
+	  gl.TRUE, 
+	  3 * Float32Array.BYTES_PER_ELEMENT, 
+	  0 * Float32Array.BYTES_PER_ELEMENT
+  )
+  gl.enableVertexAttribArray(normalAttribLocation); 
 
   //tell webGl which program we'rre using
   gl.useProgram(program);
