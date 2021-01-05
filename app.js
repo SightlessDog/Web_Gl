@@ -15,25 +15,26 @@ uniform mat4 mProj;
 
 void main () {
     fragColor = vertColor; 
-	fragNormal = (vec4(vertNormal, 0.0)).xyz; 
+	  fragNormal = (vec4(vertNormal, 0.0)).xyz; 
     gl_Position = mProj * mView *  mWorld *  vec4(vertPosition , 1.0); 
 }
 `;
 var fragmentShaderText = /* glsl*/ `
     precision mediump float;
 	
-    varying vec3 fragColor;
-	varying vec3 fragNormal;  
+    varying vec3 fragNormal; 
+	  varying vec3 fragColor;
 
     void main() {
 
-		vec3 ambientLight = vec3(0.2, 0.2, 0.5); 
-		vec3 sunLight = vec3(0.3922, 0.1059, 0.1059); 
-		vec3 sunLightDirection = normalize(vec3(3.0, 4.0, -2.0)); 
+		vec3 ambientLight = vec3(1.0, 0.2, 0.5); 
+    vec3 sunLight = vec3(0.3922, 0.1059, 0.1059); 
+    vec3 sunLightDirection = normalize(vec3(3.0, 4.0, -2.0)); 
 
-		vec3 lightIntensity = ambientLight + max(sunLight * dot(fragNormal, sunLightDirection), 0.0);  
 
-		gl_FragColor = vec4(fragColor * lightIntensity, 1.0); 
+		vec3 lightIntenisity = ambientLight + max(sunLight * dot(fragNormal, sunLightDirection), 0.0); 
+
+		gl_FragColor = vec4(fragColor * lightIntenisity, fragColor); 
 		
     }
 `;
@@ -53,7 +54,7 @@ var InitDemo = function () {
     alert("Your browser does not support WebGL");
   }
 
-  gl.clearColor(1.0, 0.0, 0.0, 1.0);
+  gl.clearColor(1.0, 0.0, 0.0, 0.5);
   gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
   //
@@ -103,17 +104,17 @@ var InitDemo = function () {
   var pyramidVertices = [
     // X, Y, Z           R, G, B
 	// Bottom face
-	0.0, 0.0, 0.0, 0.5, 0.5, 0.5, 
-	0.0, 0.0, -1.0,	0.5, 0.5, 0.5, 
-	1.0, 0.0, -1.0,	0.5, 0.5, 0.5,
-	0.0, 0.0, 0.0,	0.5, 0.5, 0.5,
-	1.0, 0.0, -1.0,	0.5, 0.5, 0.5,
-	1.0, 0.0, 0.0, 	0.5, 0.5, 0.5,
+	0.0, 0.0, 0.0, 1.0, 1.0, 1.0, 
+	0.0, 0.0, -1.0,	1.0, 1.0, 1.0, 
+	1.0, 0.0, -1.0,	1.0, 1.0, 1.0,
+	0.0, 0.0, 0.0,	1.0, 1.0, 1.0,
+	1.0, 0.0, -1.0,	1.0, 1.0, 1.0,
+	1.0, 0.0, 0.0, 	1.0, 1.0, 1.0,
 
 	// Front face 
-	0.0, 0.0, 0.0, 0.75, 0.25, 0.25,
-	1.0, 0.0, 0.0, 0.75, 0.25, 0.25, 
-	0.5, 1.0, -0.5, 0.75, 0.25, 0.25,
+	0.0, 0.0, 0.0, 0, 0, 0,
+	1.0, 0.0, 0.0, 0, 0, 0, 
+	0.5, 1.0, -0.5, 0, 0, 0,
 
 	// Right face
 	1.0, 0.0, 0.0, 1.0, 0.0, 0.15,
@@ -161,11 +162,6 @@ var InitDemo = function () {
     gl.STATIC_DRAW
   );
 
-  var pyramidNormalBufferObject = gl.createBuffer();
-  gl.bindBuffer(gl.ARRAY_BUFFER, pyramidNormalBufferObject); 
-  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(pyramidNormals), gl.STATIC_DRAW); 
-
-
   var positionAttribLocation = gl.getAttribLocation(program, "vertPosition");
   var colorAttribLocation = gl.getAttribLocation(program, "vertColor");
 
@@ -186,7 +182,10 @@ var InitDemo = function () {
     3 * Float32Array.BYTES_PER_ELEMENT // Offset from the beginning of a single vertex to this attribute
   );
 
+
+  var pyramidNormalBufferObject = gl.createBuffer();
   gl.bindBuffer(gl.ARRAY_BUFFER, pyramidNormalBufferObject); 
+  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(pyramidNormals), gl.STATIC_DRAW); 
   var normalAttribLocation = gl.getAttribLocation(program, "vertNormal"); 
   gl.vertexAttribPointer(
 	  normalAttribLocation, 
