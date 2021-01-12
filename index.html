@@ -1,14 +1,20 @@
 <html>
-	<head>
-		<title>WebGL - Rotating Susan</title>
-	</head>
-	<body onload="InitDemo();">
-		<canvas id="game-surface" width="800" height="800">
-			Your browser does not support HTML5
-		</canvas>
-		<br />
-		<script src="util.js"></script>
-        <script src="gl-matrix.js"></script> 
-		<script src="app.js"></script>
-	</body>
+  <head>
+    <title>WebGL - Rotating Susan</title>
+  </head>
+  <body onload="InitDemo();">
+    <canvas id="game-surface" width="1920" height="900">
+      Your browser does not support HTML5
+    </canvas>
+    <br />
+    <script src="initializeProgram.js"></script>
+    <script src="objects/pyramid.js"></script>
+    <script src="objects/box.js"></script>
+    <script src="drawShape.js"></script>
+    <script src="loadShapeWithTexture.js"></script>
+    <script src="util.js"></script>
+    <script src="gl-matrix.js"></script>
+    <script src="useProgram.js"></script>
+    <script src="app.js"></script>
+  </body>
 </html>
