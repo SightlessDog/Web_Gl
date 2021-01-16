@@ -3,7 +3,6 @@ precision mediump float;
 varying vec3 fragNormal; 
 varying vec3 fragColor;
 varying vec3 fragPos; 
-varying mat4 world;
 
 void main() {
     vec3 ambientLight = vec3(0, 0, 0);
@@ -21,6 +20,6 @@ void main() {
     // ambient light + diffuse 
     vec3 lightIntenisity = ambientLight + max(sunLight * dot(fragNormal, sunLightDirection), 0.0) + specular; 
           //diffuse
-    gl_FragColor = vec4(fragColor * lightIntenisity, 1.0); 
+    gl_FragColor = vec4(vec3(1.0, 1.0, 0.0), 1.0); 
 		
 }

@@ -141,11 +141,12 @@ var RunDemo = function (
 
   var program = initProg(gl, program, fragmentShader, vertexShader);
 
-  // handle mouse moves
-  onmousemove = function (e) {
-    mouseCallback(e.clientX, e.clientY);
-  };
-
+  var program2 = initProg(
+    gl,
+    program2,
+    objectFragmentShader,
+    objectVertexShader
+  );
   //to create a moving camera ( Euler system )
   var firstMouse = true;
   var yaw = 0;
@@ -165,33 +166,44 @@ var RunDemo = function (
   var worldMatrix = new Float32Array(16);
   var viewMatrix = new Float32Array(16);
   var projMatrix = new Float32Array(16);
-
-  var prog = useProgram(
-    gl,
-    program,
-    canvas,
-    worldMatrix,
-    viewMatrix,
-    projMatrix
-  );
   var xRotationMatrix = new Float32Array(16);
   var yRotationMatrix = new Float32Array(16);
+  var identityMatrix = new Float32Array(16);
+  glMatrix.mat4.identity(identityMatrix);
+  var angle = 0;
 
   //
   // Main render loop
   //
-  var identityMatrix = new Float32Array(16);
-  glMatrix.mat4.identity(identityMatrix);
-  var angle = 0;
-  var loop = function (vMatrix) {
-    angle = (performance.now() / 1000 / 6) * 2 * Math.PI;
-    glMatrix.mat4.rotate(yRotationMatrix, identityMatrix, angle, [0, 1, 0]);
-    glMatrix.mat4.rotate(xRotationMatrix, identityMatrix, angle / 4, [1, 0, 0]);
-    glMatrix.mat4.mul(worldMatrix, yRotationMatrix, xRotationMatrix);
-    gl.uniformMatrix4fv(prog.matWorldUniformLocation, gl.FALSE, identityMatrix);
+  var loop = function () {
+    var prog = useProgram(
+      gl,
+      program,
+      canvas,
+      worldMatrix,
+      viewMatrix,
+      projMatrix,
+      xRotationMatrix,
+      yRotationMatrix,
+      angle
+    );
 
-    gl.clearColor(1.0, 0.0, 0.0, 0.5);
+    // var prog2 = useProgram(
+    //   gl,
+    //   program2,
+    //   canvas,
+    //   worldMatrix,
+    //   viewMatrix,
+    //   projMatrix,
+    //   xRotationMatrix,
+    //   yRotationMatrix,
+    //   angle
+    // );
+
+    gl.clearColor(1.0, 0.3, 0.7, 0.5);
     gl.clear(gl.DEPTH_BUFFER_BIT | gl.COLOR_BUFFER_BIT);
+
+    // drawShape(gl, program2, boxVertices, boxIndices);
 
     drawShapeWithTexture(
       gl,
@@ -203,94 +215,19 @@ var RunDemo = function (
       objectImage
     );
 
-    var program2 = initProg(
-      gl,
-      program2,
-      objectFragmentShader,
-      objectVertexShader
-    );
-
-    var worldMatrix2 = new Float32Array(16);
-    var viewMatrix2 = new Float32Array(16);
-    var projMatrix2 = new Float32Array(16);
-
     var prog2 = useProgram(
       gl,
-      program,
+      program2,
       canvas,
-      worldMatrix2,
-      viewMatrix2,
-      projMatrix2
-    );
-
-    var xRotationMatrix2 = new Float32Array(16);
-    var yRotationMatrix2 = new Float32Array(16);
-
-    var identityMatrix2 = new Float32Array(16);
-    glMatrix.mat4.identity(identityMatrix2);
-    var angle2 = 0;
-
-    angle2 = (performance.now() / 1000 / 6) * 2 * Math.PI;
-    glMatrix.mat4.rotate(yRotationMatrix, identityMatrix2, angle2, [0, 1, 0]);
-    glMatrix.mat4.rotate(xRotationMatrix, identityMatrix2, angle2 / 4, [
-      1,
-      0,
-      0,
-    ]);
-    glMatrix.mat4.mul(worldMatrix2, yRotationMatrix2, xRotationMatrix2);
-    gl.uniformMatrix4fv(
-      prog2.matWorldUniformLocation,
-      gl.FALSE,
-      identityMatrix2
+      worldMatrix,
+      viewMatrix,
+      projMatrix,
+      xRotationMatrix,
+      yRotationMatrix,
+      angle
     );
 
     drawShape(gl, program2, boxVertices, boxIndices);
   };
   requestAnimationFrame(loop);
-
-  // Still some work to do for the mouse to really work
-  function mouseCallback(xPos, yPos) {
-    if (firstMouse) {
-      lastX = xPos;
-      lastY = yPos;
-      firstMouse = false;
-    }
-
-    //float
-    var xOffset;
-    xOffset = xPos - lastX;
-    var yOffset;
-    yOffset = lastY - yPos;
-
-    lastX = xPos;
-    lastY = yPos;
-
-    var sensitivity;
-    sensitivity = 0.1;
-
-    xOffset = xOffset * sensitivity;
-    yOffset = yOffset * sensitivity;
-
-    yaw = xOffset + yaw;
-    pitch = yOffset + pitch;
-
-    var newViewMatrix = new Float32Array(16);
-
-    // lookAt (our view Matrix, position of the viewer, Point the viwer is looking at, vec3 pointing up)
-    glMatrix.mat4.lookAt(
-      newViewMatrix,
-      [0, 0, -30],
-      [
-        Math.cos(glMatrix.glMatrix.toRadian(yaw)) *
-          Math.cos(glMatrix.glMatrix.toRadian(pitch)),
-
-        Math.sin(glMatrix.glMatrix.toRadian(pitch)),
-        Math.sin(glMatrix.glMatrix.toRadian(yaw)) *
-          Math.cos(glMatrix.glMatrix.toRadian(pitch)),
-      ],
-      [0, 2, 0]
-    );
-
-    //
-  }
 };

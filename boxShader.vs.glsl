@@ -1,5 +1,7 @@
 precision mediump float; 
 // attributes because they change through the vertices
+
+
 attribute vec3 vertPosition; 
 attribute vec3 vertColor; 
 attribute vec3 vertNormal; 
