@@ -12,8 +12,9 @@ uniform mat4 mWorld; //model View
 uniform mat4 mView; // our camera 
 uniform mat4 mProj; 
 void main () {
+
     fragColor = vertColor;
-    fragNormal = vertNormal; 
+    //fragNormal = vertNormal; 
     fragPos = vec3(mWorld * vec4(vertPosition, 1.0));  
     gl_Position = mProj * mView * mWorld * vec4(vertPosition , 1.0); 
 }

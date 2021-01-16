@@ -3,9 +3,29 @@
     <title>WebGL - Rotating Susan</title>
   </head>
   <body onload="InitDemo();">
-    <canvas id="game-surface" width="1920" height="900">
+    <canvas id="game-surface" width="800" height="500">
       Your browser does not support HTML5
     </canvas>
+    <span style="position: absolute;">
+    <span>
+      <p>XPosition</p>
+      <input id="slideX" type="range" min="1" max="100" value="10">
+      <p>YPosition</p>
+      <input id="slideY" type="range" min="1" max="100" value="10">
+      <p>ZPosition</p>
+      <input id="slideZ" type="range" min="1" max="100" value="10">
+      <p>XRotation</p>
+      <input id="xRotate" type="range" min="1" max="100" value="10">
+      <p>YRotation</p>
+      <input id="yRotate" type="range" min="1" max="100" value="10">
+    </span>
+    <span>
+      <p>XMouse</p>
+      <input id="mouseX" type="range" min="-1000" max="1000" value="10">
+      <p>YMouse</p>
+      <input id="mouseY" type="range" min="-1000" max="1000" value="10">
+    </span>
+  </span>
     <br />
     <script src="initializeProgram.js"></script>
     <script src="objects/pyramid.js"></script>

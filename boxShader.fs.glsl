@@ -20,6 +20,6 @@ void main() {
     // ambient light + diffuse 
     vec3 lightIntenisity = ambientLight + max(sunLight * dot(fragNormal, sunLightDirection), 0.0) + specular; 
           //diffuse
-    gl_FragColor = vec4(vec3(1.0, 1.0, 0.0), 1.0); 
+    gl_FragColor = vec4(fragColor, 1.0); 
 		
 }

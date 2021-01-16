@@ -7,7 +7,7 @@
 
     void main() {
 
-        vec3 ambientLight = vec3(0.2, 0.2, 0.5); 
+        vec3 ambientLight = vec3(0, 0, 0); 
         vec3 sunLight = vec3(0.3922, 0.1059, 0.1059); 
         vec3 sunLightDirection = normalize(vec3(3.0, 4.0, -2.0)); 
 
