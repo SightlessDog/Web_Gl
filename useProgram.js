@@ -7,17 +7,20 @@ function useProgram(
   projMatrix,
   xRotationMatrix,
   yRotationMatrix,
-  translateX, 
+  translateX,
   translateY,
   translateZ,
-  rotateX, 
-  rotateY,  
+  rotateX,
+  rotateY,
+  radius, 
+  height, 
   angle
 ) {
   gl.useProgram(program);
 
-  var Rotation = new Float32Array(16); 
-  var Translation = new Float32Array(16); 
+  var Scaling = new Float32Array(16);
+  var Rotation = new Float32Array(16);
+  var Translation = new Float32Array(16);
   var matWorldUniformLocation = gl.getUniformLocation(program, "mWorld");
   var matViewUniformLocation = gl.getUniformLocation(program, "mView");
   var matProjUniformLocation = gl.getUniformLocation(program, "mProj");
@@ -36,12 +39,21 @@ function useProgram(
   gl.uniformMatrix4fv(matViewUniformLocation, gl.FALSE, viewMatrix);
   gl.uniformMatrix4fv(matProjUniformLocation, gl.FALSE, projMatrix);
 
+  if ((radius != null) && (height != null)) {
+    glMatrix.mat4.scale(Scaling, identityMatrix, [radius, height, 0]); 
+  }
+
   angle = (performance.now() / 70000 / 6) * 2 * Math.PI;
-  glMatrix.mat4.rotate(yRotationMatrix, identityMatrix, angle*rotateY, [0, 1, 0]);
-  glMatrix.mat4.rotate(xRotationMatrix, identityMatrix, angle*rotateX, [1, 0, 0]);
   glMatrix.mat4.mul(Rotation, yRotationMatrix, xRotationMatrix);
-  glMatrix.mat4.translate(Translation, identityMatrix, [translateX, translateY, translateZ])
-  glMatrix.mat4.mul(worldMatrix, Rotation, Translation)
+  glMatrix.mat4.translate(Translation, identityMatrix, [
+    translateX,
+    translateY,
+    translateZ,
+  ]);
+  glMatrix.mat4.mul(worldMatrix, Rotation, Translation);
+  if ((radius != null) && (height != null)) {
+    glMatrix.mat4.mul(worldMatrix, Scaling, worldMatrix); 
+  }
   gl.uniformMatrix4fv(matWorldUniformLocation, gl.FALSE, worldMatrix);
 
   return {

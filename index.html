@@ -6,7 +6,7 @@
     <canvas id="game-surface" width="800" height="500">
       Your browser does not support HTML5
     </canvas>
-    <span style="position: absolute;">
+  <span style="position: absolute;">
     <span>
       <p>XPosition</p>
       <input id="slideX" type="range" min="1" max="100" value="10">
@@ -25,7 +25,15 @@
       <p>YMouse</p>
       <input id="mouseY" type="range" min="-1000" max="1000" value="10">
     </span>
+    <form onsubmit="handleSubmit()">
+      <span>Enter the heigth and the radius of the pyramid</span>
+      <label for="radius">Radius :</label>
+      <input type="number" id="radius" name="radius"><br>
+      <label for="height">height : </label>
+      <input type="number" id="height" name="height"><br>
+    </form>
   </span>
+  <img id="crate-image" src="crate.png" width="0" height="0"></img>
     <br />
     <script src="initializeProgram.js"></script>
     <script src="objects/pyramid.js"></script>
