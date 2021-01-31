@@ -2,42 +2,42 @@ var gl;
 var model;
 
 var InitDemo = function () {
-  loadTextResource("/shader.vs.glsl", function (vsError, vsText) {
+  loadTextResource("./Shaders/shader.vs.glsl", function (vsError, vsText) {
     if (vsError) {
       alert("Error with vs error");
       console.error(vsError);
     } else {
-      loadTextResource("/shader.fs.glsl", function (fsError, fsText) {
+      loadTextResource("./Shaders/shader.fs.glsl", function (fsError, fsText) {
         if (fsError) {
           alert("Error with fs");
           console.log(fsError);
         } else {
-          loadJSONResource("/hand.json", function (err, obj) {
+          loadJSONResource("Assets/hand.json", function (err, obj) {
             if (err) {
               alert("error with the object");
               console.error(err);
             } else {
-              loadImage("/handTextures.jpg", function (imgErr, image) {
+              loadImage("Assets/handTextures.jpg", function (imgErr, image) {
                 if (imgErr) {
                   alert("Error while loading the image");
                   console.error(imgErr);
                 } else {
                   loadTextResource(
-                    "/boxShader.vs.glsl",
+                    "./Shaders/boxShader.vs.glsl",
                     function (bfsError, boxVertShader) {
                       if (bfsError) {
                         alert("Error with the box vert shader!");
                         console.error(bfsError);
                       } else {
                         loadTextResource(
-                          "/boxShader.fs.glsl",
+                          "./Shaders/boxShader.fs.glsl",
                           function (bvsError, boxFragShader) {
                             if (bvsError) {
                               alert("Error loading the boxfragShader");
                               console.error(bvsError);
                             } else {
                               loadTextResource(
-                                "/pyramidShader.vs.glsl",
+                                "./Shaders/pyramidShader.vs.glsl",
                                 function (error, pyramidVertexShader) {
                                   if (error) {
                                     alert(
@@ -46,7 +46,7 @@ var InitDemo = function () {
                                     console.error(error);
                                   } else {
                                     loadTextResource(
-                                      "/pyramidShader.fs.glsl",
+                                      "./Shaders/pyramidShader.fs.glsl",
                                       function (
                                         errorFragment,
                                         pyramidFragmentShader
@@ -57,7 +57,7 @@ var InitDemo = function () {
                                           );
                                           console.error(errorFragment);
                                         } else {
-                                          loadImage("/crate.png", function(crateErr, crate) {
+                                          loadImage("Assets/crate.png", function(crateErr, crate) {
                                             if (crateErr) {
                                               alert("Error loading crate")
                                               console.error(crateErr); 
