@@ -10,5 +10,5 @@ void main() {
     vec3 sunLight = vec3(0.3922, 0.1059, 0.1059);  
     // ambient light + diffuse 
     vec3 lightIntenisity = ambientLight + max(sunLight * dot(fragNormal, sunLightDirection), 0.0); 
-    gl_FragColor = vec4(lightIntenisity, fragPos); 
+    gl_FragColor = vec4(fragColor * lightIntenisity, fragPos); 
 }

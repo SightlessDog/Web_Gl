@@ -233,6 +233,7 @@ var RunDemo = function (
   var pyramidRadius; 
   var pyramidHeight; 
 
+  var handWidth = 5; 
   var worldMatrix = new Float32Array(16);
   var viewMatrix = new Float32Array(16);
   var projMatrix = new Float32Array(16);
@@ -258,7 +259,7 @@ var RunDemo = function (
   var xPyramidRotationMatrix = new Float32Array(16);
   glMatrix.mat4.identity(identityMatrix3);
 
-  glMatrix.mat4.lookAt(viewMatrix, [0.4, 0, 0], [-0.3, -0.3, 1.8], [0, 2, -20]);
+  glMatrix.mat4.lookAt(viewMatrix, [0.4, 1.3, -3], [-0.3, -0.3, 1.8], [0, 2, -20]);
 
   glMatrix.mat4.lookAt(viewMatrix2, [0, 0, -30], [0, 0, 0], [0, 2, 0]);
 
@@ -271,8 +272,8 @@ var RunDemo = function (
     gl.clearColor(1.0, 0.3, 0.7, 0.5);
     gl.clear(gl.DEPTH_BUFFER_BIT | gl.COLOR_BUFFER_BIT);
     var speed = (performance.now() / 1000 / 6) * 2 * Math.PI;
-    glMatrix.mat4.rotate(yRotationMatrix, identityMatrix, angle*rotateX, [0, 1, 0]);
-    glMatrix.mat4.rotate(xRotationMatrix, identityMatrix, angle*rotateY, [1, 0, 0]);
+    glMatrix.mat4.rotate(yRotationMatrix, identityMatrix, angle*rotateX, [0, 0.3, 0]);
+    glMatrix.mat4.rotate(xRotationMatrix, identityMatrix, angle*rotateY, [0.3, 0, 0]);
     glMatrix.mat4.rotate(xPyramidRotationMatrix, identityMatrix, speed, [1, 0, 0]); 
 
     var prog = useProgram(
@@ -289,6 +290,8 @@ var RunDemo = function (
       translateZ,
       rotateX,
       rotateY,
+      handWidth, 
+      null,
       angle
     );
 
@@ -316,10 +319,12 @@ var RunDemo = function (
       translateZ,
       rotateX,
       rotateY,
+      null, 
+      null,
       angle
     );
 
-    drawShape(gl, program2, boxVertices, boxIndices, null,  crateImage);
+    shapeWithTexture(gl, program2, boxVertices, boxIndices);
 
     var prog3 = useProgram(
       gl,
@@ -393,6 +398,7 @@ var RunDemo = function (
   var radius = document.getElementById("radius");
   radius.onchange = function () {
     value = this.value;
+    console.log(value);
     radiusCallBack(value);  
   }
   

@@ -76,19 +76,5 @@ function drawShapeWithTexture(gl, program ,shapeVertices, shapeIndices, shapeNor
   gl.bindTexture(gl.TEXTURE_2D, susanTexture);
   gl.activeTexture(gl.TEXTURE0);
 
-  // var colorAttribLocation = gl.getAttribLocation(program, "vertColor");
-
-
-  // gl.vertexAttribPointer(
-  //   colorAttribLocation, // Attribute location
-  //   3, // Number of elements per attribute
-  //   gl.FLOAT, // Type of elements
-  //   gl.FALSE,
-  //   6 * Float32Array.BYTES_PER_ELEMENT, // Size of an individual vertex
-  //   3 * Float32Array.BYTES_PER_ELEMENT // Offset from the beginning of a single vertex to this attribute
-  // );
-  
-  // gl.enableVertexAttribArray(colorAttribLocation);
-
   gl.drawElements(gl.TRIANGLES, shapeIndices.length, gl.UNSIGNED_SHORT, 0); 
 }

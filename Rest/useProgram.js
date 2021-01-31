@@ -39,9 +39,15 @@ function useProgram(
   gl.uniformMatrix4fv(matViewUniformLocation, gl.FALSE, viewMatrix);
   gl.uniformMatrix4fv(matProjUniformLocation, gl.FALSE, projMatrix);
 
+
+  if ((radius != null) && (height == null)) {
+    glMatrix.mat4.scale(Scaling, identityMatrix, [8, 8, 4]); 
+  }
+
   if ((radius != null) && (height != null)) {
     glMatrix.mat4.scale(Scaling, identityMatrix, [radius, height, 0]); 
   }
+
 
   angle = (performance.now() / 70000 / 6) * 2 * Math.PI;
   glMatrix.mat4.mul(Rotation, yRotationMatrix, xRotationMatrix);
@@ -51,7 +57,7 @@ function useProgram(
     translateZ,
   ]);
   glMatrix.mat4.mul(worldMatrix, Rotation, Translation);
-  if ((radius != null) && (height != null)) {
+  if ((radius != null) || (height != null)) {
     glMatrix.mat4.mul(worldMatrix, Scaling, worldMatrix); 
   }
   gl.uniformMatrix4fv(matWorldUniformLocation, gl.FALSE, worldMatrix);
